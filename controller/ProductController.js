@@ -39,3 +39,37 @@ exports.addNewProduct = async(req, res) =>{
         res.status(500).json({msg:err.message})
     }
 }
+
+exports.updateProduct = async (req, res) =>{
+    try{
+        const product = req.body
+        const fetchedProduct = await Product.findOne({proId: product.proId})
+        if(fetchedProduct){
+            await Product.updateOne(product)
+            res.json(await Product.findOne({proId: product.proId}))
+        }
+        else{
+            res.json({msg: 'Product doesnt exists'})
+        }
+    }
+    catch(err){
+        res.status(500).json({msg: err.message})
+    }
+}
+
+exports.deleteProduct = async (req, res)=>{
+    try{
+        const product = await Product.findOne({proId: req.params.id})
+        if(product){
+            await Product.deleteOne({proId:product.proId})
+            res.json(product)
+        }
+        else{
+            res.json({msg: 'product doesnt exists'})
+        }
+    }
+    catch(err){
+        res.status(500).json({msg: err.message})
+    }
+}
+
